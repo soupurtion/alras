@@ -1,2 +1,3 @@
 # alras
 Automated Lab Room Allocation System
+The Cyber Security Innovation Center (CSIC) faces challenges in efficient allocation of lab rooms to its students. The current manual reservation process is cumbersome and time-consuming for both the lab coordinator and the cyber security students. This inefficiency results in delays, conflicts, and a lack of real-time room availability information. This is an implement an automated lab room allocation system that enables students to check real-time room availability, request slots without coordinator approval where applicable, and efficiently manage lab room reservations.
