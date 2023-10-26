@@ -1,0 +1,17 @@
+{% extends 'alras_application/base_template.html' %}
+
+
+{% block content %}
+<h1>Cyber Security Lab Rooms</h1>
+{% if labroom_list %}
+<ul>
+{% for labroom in labroom_list %}
+<li>
+<a href="{{ labroom.get_absolute_url }}">{{labroom.slots.title}}</a>
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are no students registered.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'alras_application/base_template.html' %}
+
+
+{% block content %}
+<h1>Labroom: {{ labroom.title }}</h1>
+
+{% for room in roomslot %}
+<p><strong>Slot Information:</strong> {{ room.title }}</p>
+{% endfor %}
+
+{% if students %}
+{% for student in students %}
+<p><strong>Student Name:</strong> {{ student.name }}</p>
+<p><strong>Student Major:</strong> {{ student.major }}</p>
+<p><strong>Purpose:</strong> {{ student.purpose }}</p>
+<p><strong>Contact Email:</strong> {{ student.email }}</p>
+{% endfor %}
+{% else %}
+<p>This slot is available for reservation</p>
+<a class="btn btn-primary" href="{%url 'labroom'%}" role="button">Reserve</a>
+{% endif %}
+<a class="btn btn-primary" href="{%url 'labroom'%}" role="button">Go back</a>
+{% endblock %}
