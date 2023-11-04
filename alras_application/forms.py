@@ -8,3 +8,8 @@ class ReserveSlotForm(ModelForm):
         model = Student
         fields =('name', 'email', 'major','purpose')
 
+class ReserveAnySlotForm(ModelForm):
+    class Meta:
+        model = Student
+        fields =('name', 'email', 'major','slot','purpose')
+

@@ -3,6 +3,7 @@
 
 {% block content %}
 <h1>Cyber Security Lab Rooms</h1>
+
 {% if labroom_list %}
 <ul>
 {% for labroom in labroom_list %}
@@ -10,8 +11,9 @@
 <a href="{{ labroom.get_absolute_url }}">{{labroom.slots.title}}</a>
 </ul>
 {% endfor %}
+
 </ul>
 {% else %}
-<p>There are no students registered.</p>
+<p>There are no lab rooms configured.</p>
 {% endif %}
 {% endblock %}

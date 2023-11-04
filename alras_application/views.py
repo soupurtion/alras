@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Student, LabRoom, RoomSlot
 from django.views import generic
-from .forms import ReserveSlotForm
+from .forms import ReserveSlotForm, ReserveAnySlotForm
 
 
 # Create your views here.
@@ -28,7 +28,6 @@ class LabRoomDetailView(generic.DetailView):
         a = LabRoom.objects.filter(id=self.kwargs['pk']).values().all()[0]['slots_id']
         context["roomslot"] = RoomSlot.objects.filter(id=a)
         context["students"] = Student.objects.filter(slot_id=a)
-        print(context["students"].values().all())
         return context
 
 def reserveSlot(request, pk):
@@ -93,3 +92,64 @@ def updateSlot(request, pk):
 
     context = {'form': form,'roomslot':roomslot,'pk':pk}
     return render(request, 'alras_application/update_slot.html', context)
+
+'''
+def reserveAnySlot(request):
+    form = ReserveAnySlotForm()
+    
+    if request.method == 'POST':
+        # Create a new dictionary with form data and slot_id
+        student_data = request.POST.copy()
+        form = ReserveSlotForm(student_data)
+
+        if form.is_valid():
+            # Save the form without committing to the database
+            student = form.save(commit=False)
+            # Set the slot relationship
+           
+            student.save()
+
+            # Redirect back to the portfolio detail page
+            return redirect('labroom')
+
+    context = {'form': form}
+    return render(request, 'alras_application/reserve_any_slot.html', context)
+
+def cancelAnySlot(request):
+    slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slots_id']
+    roomslot = RoomSlot.objects.get(id=slot_id)
+    student = Student.objects.get(slot_id=slot_id)
+    if request.method == 'POST':
+        student.delete()
+        return redirect('labroom-detail', slot_id)
+    
+    return render(request,'alras_application/cancel_slot.html',{'pk':pk,'roomslot':roomslot})
+
+def updateAnySlot(request):
+    slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slots_id']
+    student = Student.objects.filter(slot_id=slot_id).values()[0]
+    s_id = student['id']
+    print(s_id)
+    roomslot = RoomSlot.objects.get(id=slot_id)
+    form = ReserveSlotForm(initial=student)
+    
+    if request.method == 'POST':
+        # Create a new dictionary with form data and slot_id
+        student_data = request.POST.copy()
+        student_data['slot_id'] = slot_id
+        form = ReserveSlotForm(student_data)
+
+        if form.is_valid():
+            # Save the form without committing to the database
+            student = form.save(commit=False)
+            # Set the slot relationship
+            student.slot = roomslot
+            student.id = s_id
+            student.save()
+
+            # Redirect back to the portfolio detail page
+            return redirect('labroom-detail', slot_id)
+
+    context = {'form': form,'roomslot':roomslot,'pk':pk}
+    return render(request, 'alras_application/update_slot.html', context)
+'''

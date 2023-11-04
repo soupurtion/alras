@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'bootstrap5',
     'alras_application',
 ]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,4 +131,4 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
 os.path.join(BASE_DIR, 'static')
 ]
-MEDIA_URL = '/images/'
+MEDIA_URL = 'static/images/'
