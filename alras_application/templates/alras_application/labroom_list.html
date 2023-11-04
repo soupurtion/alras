@@ -6,9 +6,9 @@
 {% if labroom_list %}
 <ul>
 {% for labroom in labroom_list %}
-<li>
+<ul>
 <a href="{{ labroom.get_absolute_url }}">{{labroom.slots.title}}</a>
-</li>
+</ul>
 {% endfor %}
 </ul>
 {% else %}

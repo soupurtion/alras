@@ -11,4 +11,7 @@ urlpatterns = [
 path('', views.index, name='index'),
 path('labroom/', views.LabRoomListView.as_view(), name= 'labroom'),
 path('labroom/<int:pk>', views.LabRoomDetailView.as_view(), name='labroom-detail'),
+path('labroom/<int:pk>/reserve_slot/', views.reserveSlot, name='reserve_slot'),
+path('labroom/<int:pk>/cancel_slot/', views.cancelSlot, name='cancel_slot'),
+path('labroom/<int:pk>/update_slot/', views.updateSlot, name='update_slot'),
 ]

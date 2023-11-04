@@ -1,0 +1,20 @@
+<!-- inherit from base.html -->
+{% extends 'alras_application/base_template.html' %}
+
+
+<!-- Replace block content in base_template.html -->
+{% block content %}
+
+<h4> Reserve Slot: {{ roomslot }} </h4>
+
+
+<form action="" method="POST">
+{% csrf_token %}
+<table>
+{{ form.as_table }}
+</table>
+<a class="btn btn-primary" href="{%url 'labroom-detail' pk %}" role="button">Cancel</a>
+<input type="submit" name="Submit">
+</form>
+
+{% endblock %}
