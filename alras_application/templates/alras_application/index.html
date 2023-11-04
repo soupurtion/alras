@@ -4,16 +4,15 @@
 
 <!-- Replace block content in base_template.html -->
 {% block content %}
-<div class="container">
-  <div class="row justify-content-center">
-<h1>Welcome to Automated Lab Room Allocation System</h1>
-<img src="images/cyberLab.jpg" class="img-fluid" alt="Cinque Terre">
-<h4>Reservation Status Today</h4>
+<div class="container justify-content-center">
+<h1 style="color:tomato;">Welcome to Automated Lab Room Allocation System</h1>
+<img src="static/images/cyberLab_r.jpeg" class="img-fluid" alt="Cinque Terre" width="800" height="600">
 </div>
-</div>
-
+<br>
+<div class="container justify-content-center">
+<h4 style="color:purple;">Reservation Status Today</h4>
 {% for i in student_active_today %}
-<div class="col-sm-3 p-1 border rounded-top">
+<div class="col-sm-4 p-1 border rounded-top">
     <div class="container-fluid-sm">
     <strong>Name:</strong> {{i.name}}
     </br>
@@ -21,5 +20,5 @@
     </div>
 </div>
 {% endfor %}
-
+</div>
 {% endblock %}

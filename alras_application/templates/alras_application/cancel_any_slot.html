@@ -1,0 +1,14 @@
+<!-- inherit from base.html -->
+{% extends 'alras_application/base_template.html' %}
+
+{% block content %}
+<h6>Are you sure you want to cancel reservation for {{roomslot}}?</h6>
+
+<form action="" method="POST">
+{% csrf_token %}
+<a class="btn btn-primary" href="{%url 'labroom'%}" role="button">Cancel</a>
+<input type="submit" value="Submit" />
+</form>
+
+
+{% endblock %}

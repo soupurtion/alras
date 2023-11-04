@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'bootstrap5',
     'alras_application',
 ]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
