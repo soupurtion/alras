@@ -2,18 +2,22 @@
 
 
 {% block content %}
-<h1>Cyber Security Lab Rooms</h1>
-
+<div class="container justify-content-center">
+<h1 style="color:tomato;">Cyber Security Lab Rooms</h1>
+</div>
 {% if labroom_list %}
+<div class="container justify-content-center">
 <ul>
 {% for labroom in labroom_list %}
 <ul>
-<a href="{{ labroom.get_absolute_url }}">{{labroom.slots.title}}</a>
+<div class="col-sm-3 p-1 border rounded-top">
+<h4>{{labroom.slots.title}} <a class="btn btn-primary" href="{{ labroom.get_absolute_url }}" role="button">View</a><h4>
+</div>
 </ul>
 {% endfor %}
-
 </ul>
 {% else %}
 <p>There are no lab rooms configured.</p>
+</div>
 {% endif %}
 {% endblock %}

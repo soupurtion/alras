@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1>Labroom: {{ labroom.title }}</h1>
-
+<div class="col-sm-3 p-1 border rounded-top bg-info text-dark">
 {% for room in roomslot %}
 <p><strong>Slot Information:</strong> {{ room.title }}</p>
 {% endfor %}
@@ -22,4 +22,5 @@
 <a class="btn btn-primary" href="{% url 'reserve_slot' labroom.id %}" role="button">Reserve</a>
 {% endif %}
 <a class="btn btn-primary" href="{%url 'labroom'%}" role="button">Go back</a>
+</div>
 {% endblock %}

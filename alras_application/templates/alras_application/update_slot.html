@@ -5,9 +5,9 @@
 <!-- Replace block content in base_template.html -->
 {% block content %}
 
-<h4> Reserve Slot: {{ roomslot }} </h4>
+<h4> Update Slot: {{ roomslot }} </h4>
 
-
+<div class="col-sm-3 p-1 border rounded-top bg-info text-dark">
 <form action="" method="POST">
 {% csrf_token %}
 <table>
@@ -16,5 +16,5 @@
 <a class="btn btn-primary" href="{%url 'labroom-detail' pk %}" role="button">Cancel</a>
 <input type="submit" name="Submit">
 </form>
-
+</div>
 {% endblock %}
