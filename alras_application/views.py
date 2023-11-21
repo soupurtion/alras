@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import Student, LabRoom, RoomSlot
 from django.views import generic
-from .forms import ReserveSlotForm, ReserveAnySlotForm
-
+from .forms import ReserveSlotForm, ReserveAnySlotForm, CreateUserForm
+from django.contrib import messages
+from django.contrib.auth.models import Group
 
 # Create your views here.
 def index(request):
@@ -153,3 +154,24 @@ def updateAnySlot(request):
     context = {'form': form,'roomslot':roomslot,'pk':pk}
     return render(request, 'alras_application/update_slot.html', context)
 '''
+
+def registerPage(request):
+
+    form = CreateUserForm()
+
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            group = Group.objects.get(name='student')
+            user.groups.add(group)
+            student = Student.objects.create(user=user)
+            student.save()
+
+            messages.success(request,'Account was created for '+username)
+            return redirect('login')
+    
+    context = {'form':form}
+    return render(request, 'registration/register.html', context)
+

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 
@@ -17,4 +17,6 @@ path('labroom/<int:pk>/update_slot/', views.updateSlot, name='update_slot'),
 #path('labroom/reserve_slot/', views.reserveAnySlot, name='reserve_any_slot'),
 #path('labroom/cancel_slot/', views.cancelAnySlot, name='cancel_any_slot'),
 #path('labroom/update_slot/', views.updateAnySlot, name='update_any_slot'),
+path('accounts/',include('django.contrib.auth.urls')),
+path('accounts/register/', views.registerPage, name='register_page'),
 ]
