@@ -11,6 +11,7 @@
 <br>
 <div class="container justify-content-center">
 <h4 style="color:purple;">Reservation Status Today</h4>
+{%if student_active_today %}
 {% for i in student_active_today %}
 <div class="col-sm-4 p-1 border rounded-top">
     <div class="container-fluid-sm">
@@ -20,5 +21,8 @@
     </div>
 </div>
 {% endfor %}
+{%else%}
+    <p>No lab slots booked today</p>
 </div>
+{%endif%}
 {% endblock %}

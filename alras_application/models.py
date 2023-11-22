@@ -2,18 +2,6 @@ from django.db import models
 from django.urls import reverse
 
 # Create your models here.
-class day(models.Model):
-    Day = (
-        ('1', 'Monday'),
-        ('2', 'Tuesday'),
-        ('3', 'Wednesday'),
-        ('4', 'Thursday'),
-        ('5', 'Friday'),
-        ('6', 'Saturday'),
-    )
-
-
-    
 
 class RoomSlot(models.Model):
     SLOTS = (

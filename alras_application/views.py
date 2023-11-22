@@ -5,10 +5,12 @@ from django.views import generic
 from .forms import ReserveSlotForm, ReserveAnySlotForm, CreateUserForm
 from django.contrib import messages
 from django.contrib.auth.models import Group
+from django.utils import timezone
 
 # Create your views here.
 def index(request):
-    student_active_today = Student.objects.all()
+    today = timezone.now().date()
+    student_active_today = Student.objects.filter(date=today)
     return render( request, 'alras_application/index.html',{'student_active_today':student_active_today})
 
 
@@ -27,13 +29,13 @@ class LabRoomDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         #print(self.objects.values().all())
-        a = LabRoom.objects.filter(id=self.kwargs['pk']).values().all()[0]['slots_id']
+        a = LabRoom.objects.filter(id=self.kwargs['pk']).values().all()[0]['slot_id']
         context["roomslot"] = RoomSlot.objects.filter(id=a)
         context["students"] = Student.objects.filter(slot_id=a)
         return context
 
 def reserveSlot(request, pk):
-    slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slots_id']
+    slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
     form = ReserveSlotForm()
     roomslot = RoomSlot.objects.get(id=slot_id)
     print(roomslot)
@@ -58,7 +60,7 @@ def reserveSlot(request, pk):
     return render(request, 'alras_application/reserve_slot.html', context)
 
 def cancelSlot(request,pk):
-    slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slots_id']
+    slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
     roomslot = RoomSlot.objects.get(id=slot_id)
     student = Student.objects.get(slot_id=slot_id)
     if request.method == 'POST':
@@ -68,7 +70,7 @@ def cancelSlot(request,pk):
     return render(request,'alras_application/cancel_slot.html',{'pk':pk,'roomslot':roomslot})
 
 def updateSlot(request, pk):
-    slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slots_id']
+    slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
     student = Student.objects.filter(slot_id=slot_id).values()[0]
     s_id = student['id']
     print(s_id)

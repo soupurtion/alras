@@ -11,7 +11,7 @@
 {% for labroom in labroom_list %}
 <ul>
 <div class="col-sm-3 p-1 border rounded-top">
-<h4>{{labroom.slots.title}} <a class="btn btn-primary" href="{{ labroom.get_absolute_url }}" role="button">View</a><h4>
+<h5>Room {{labroom.title}} {{labroom.slot.title}} <a class="btn btn-primary" href="{{ labroom.get_absolute_url }}" role="button">View</a><h5>
 </div>
 </ul>
 {% endfor %}
