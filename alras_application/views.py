@@ -21,6 +21,7 @@ class StudentDetailView(generic.DetailView):
 class LabRoomListView(generic.ListView):
     model = LabRoom
 
+
 class LabRoomDetailView(generic.DetailView):
     model = LabRoom
     def get_context_data(self, **kwargs):
