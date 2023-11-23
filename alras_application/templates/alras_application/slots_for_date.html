@@ -1,0 +1,17 @@
+
+{% extends 'alras_application/base_template.html' %}
+
+
+{% block content %}
+    <h1>Slots for Date: {{ selected_date }}</h1>
+
+    <h2>Room Slots:</h2>
+    {% for slot in room_slots %}
+        <p>{{ slot.title }}</p>
+    {% endfor %}
+
+    <h2>Lab Rooms:</h2>
+    {% for room in lab_rooms %}
+        <p>{{ room.title }} - {{ room.slot.title }}</p>
+    {% endfor %}
+{% endblock %}

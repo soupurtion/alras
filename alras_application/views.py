@@ -6,10 +6,12 @@ from .forms import ReserveSlotForm, ReserveAnySlotForm, CreateUserForm
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.utils import timezone
+from datetime import datetime
+
 
 # Create your views here.
 def index(request):
-    today = timezone.now().date()
+    today = datetime.now().date()
     student_active_today = Student.objects.filter(date=today)
     return render( request, 'alras_application/index.html',{'student_active_today':student_active_today})
 
@@ -26,12 +28,17 @@ class LabRoomListView(generic.ListView):
 
 class LabRoomDetailView(generic.DetailView):
     model = LabRoom
+    
     def get_context_data(self, **kwargs):
+        today = datetime.now().date()
+        print(today)
         context = super().get_context_data(**kwargs)
         #print(self.objects.values().all())
         a = LabRoom.objects.filter(id=self.kwargs['pk']).values().all()[0]['slot_id']
         context["roomslot"] = RoomSlot.objects.filter(id=a)
-        context["students"] = Student.objects.filter(slot_id=a)
+        context["students"] = Student.objects.filter(slot_id=a,date=today)
+        print(context["students"])
+
         return context
 
 def reserveSlot(request, pk):
@@ -178,3 +185,19 @@ def registerPage(request):
     context = {'form':form}
     return render(request, 'registration/register.html', context)
 
+
+'''
+def view_slots_for_date(request):
+    selected_date = request.GET.get('date', None)
+
+    if selected_date:
+        selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+        room_slots = RoomSlot.objects.filter(date=selected_date)
+        lab_rooms = LabRoom.objects.filter(slot__date=selected_date)
+    else:
+        # Handle the case when no date is selected
+        room_slots = RoomSlot.objects.all()
+        lab_rooms = LabRoom.objects.all()
+
+    return render(request, 'slots_for_date.html', {'room_slots': room_slots, 'lab_rooms': lab_rooms, 'selected_date': selected_date})
+'''

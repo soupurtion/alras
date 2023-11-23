@@ -15,7 +15,7 @@
 <p><strong>Student Major:</strong> {{ student.major }}</p>
 <p><strong>Purpose:</strong> {{ student.purpose }}</p>
 <p><strong>Contact Email:</strong> {{ student.email }}</p>
-<p><strong>Reservation date:</strong> {{ student.date }}</p>
+<p><strong>Reservation date:</strong> {{ student.date|date:"F j, Y" }}</p>
 </div>
 {% endfor %}
 <a class="btn btn-primary" href="{%url 'update_slot' labroom.id%}" role="button">Update Slot</a>
