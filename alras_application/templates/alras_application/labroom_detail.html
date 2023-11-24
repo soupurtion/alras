@@ -2,11 +2,13 @@
 
 
 {% block content %}
-<h1>Labroom: {{ labroom.title }}</h1>
+<h1>Labroom: {{ labroom.title }} {{ labroom.slot.title }}</h1>
 
+<!-- Comments 
 {% for room in roomslot %}
 <p><strong>Slot Information:</strong> {{ room.title }}</p>
 {% endfor %}
+-->
 
 {% if students %}
 {% for student in students %}

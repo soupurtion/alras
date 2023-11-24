@@ -9,8 +9,9 @@ urlpatterns = [
 # name='index' parameter is to dynamically create url
 # example in html <a href="{% url 'index' %}">Home</a>.
 path('', views.index, name='index'),
-path('labroom/', views.LabRoomListView.as_view(), name= 'labroom'),
-path('labroom/<int:pk>', views.LabRoomDetailView.as_view(), name='labroom-detail'),
+#path('labroom/', views.LabRoomListView.as_view(), name= 'labroom'),
+path('labroom/', views.labroom_list, name= 'labroom'),
+path('labroom/<int:pk>/<str:date>/', views.LabRoomDetailView.as_view(), name='labroom-detail'),
 path('labroom/<int:pk>/reserve_slot/', views.reserveSlot, name='reserve_slot'),
 path('labroom/<int:pk>/cancel_slot/', views.cancelSlot, name='cancel_slot'),
 path('labroom/<int:pk>/update_slot/', views.updateSlot, name='update_slot'),
@@ -21,3 +22,7 @@ path('accounts/',include('django.contrib.auth.urls'), name='login'),
 path('accounts/register/', views.registerPage, name='register_page'),
 #path('slots-for-date/', views.view_slots_for_date, name='view_slots_for_date'),
 ]
+
+
+
+

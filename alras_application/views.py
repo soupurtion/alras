@@ -6,8 +6,8 @@ from .forms import ReserveSlotForm, ReserveAnySlotForm, CreateUserForm
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.utils import timezone
-from datetime import datetime
-
+from datetime import datetime, timedelta
+from django.urls import reverse
 
 # Create your views here.
 def index(request):
@@ -24,25 +24,27 @@ class StudentDetailView(generic.DetailView):
 
 class LabRoomListView(generic.ListView):
     model = LabRoom
-
-
+    
 class LabRoomDetailView(generic.DetailView):
     model = LabRoom
     
     def get_context_data(self, **kwargs):
-        today = datetime.now().date()
-        print(today)
+        #today = datetime.now().date()
+        today = self.kwargs['date']
+        print(self.kwargs['pk'])
         context = super().get_context_data(**kwargs)
         #print(self.objects.values().all())
-        a = LabRoom.objects.filter(id=self.kwargs['pk']).values().all()[0]['slot_id']
-        context["roomslot"] = RoomSlot.objects.filter(id=a)
-        context["students"] = Student.objects.filter(slot_id=a,date=today)
+        #a = LabRoom.objects.filter(id=self.kwargs['pk']).values().all()[0]['slot_id']
+        #print(a)
+        #context["roomslot"] = RoomSlot.objects.filter(id=a)
+        context["students"] = Student.objects.filter(slot_id=self.kwargs['pk'],date=today)
         print(context["students"])
-
         return context
 
 def reserveSlot(request, pk):
+    print(pk)
     slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
+    print(slot_id)
     form = ReserveSlotForm()
     roomslot = RoomSlot.objects.get(id=slot_id)
     print(roomslot)
@@ -50,14 +52,14 @@ def reserveSlot(request, pk):
     if request.method == 'POST':
         # Create a new dictionary with form data and slot_id
         student_data = request.POST.copy()
-        student_data['slot_id'] = slot_id
+        #student_data['slot_id'] = slot_id
         form = ReserveSlotForm(student_data)
 
         if form.is_valid():
             # Save the form without committing to the database
             student = form.save(commit=False)
             # Set the slot relationship
-            student.slot = roomslot
+            #student.slot = roomslot
             student.save()
 
             # Redirect back to the portfolio detail page
@@ -201,3 +203,62 @@ def view_slots_for_date(request):
 
     return render(request, 'slots_for_date.html', {'room_slots': room_slots, 'lab_rooms': lab_rooms, 'selected_date': selected_date})
 '''
+
+
+def labroom_list(request):
+    labrooms = LabRoom.objects.all()
+    
+
+    # Create a list of dictionaries with LabRoom instances and their corresponding absolute URLs
+    #labroom_data = [{"labroom":[],"view_url":[],"reserve_url":[],"update_url":[],"date":[]}]
+    #labroom_data = {"labroom":[]}
+     
+    today = datetime.now().date()
+    dates = []
+    #labroom_data_datewise = []
+    labroom_list = [labroom for labroom in labrooms]
+    table_data = []
+
+    for i in range(7):
+        dates.append(today)
+        today = datetime.now().date() + timedelta(days=i+1)
+    view_urls_datewise = []
+
+    
+    for labroom in labrooms:
+        today = datetime.now().date()
+        temp = []
+        for i in range(7):
+            #date_for_url = today + timedelta(days=i)
+            temp.append(reverse('labroom-detail', args=[labroom.pk, str(today)]))
+            today = datetime.now().date() + timedelta(days=i+1)
+        print(temp)
+        view_urls_datewise.append(temp)
+        table_data.append({'labroom':labroom,'urls':temp})
+    #print(dates)
+    #print(labroom_list)
+    #print(len(view_urls_datewise))
+    #print(table_data)
+    '''
+    print(labroom_data1)
+    for l in labrooms:
+        labroom_data["labroom"].append(l)
+    print(labroom_data)
+    
+    for i in range(7):
+            labroom_data["date"].append(today)
+            labroom_data["view_url"].append(reverse('labroom-detail', args=[l.pk, str(today)]))
+            student = Student.objects.filter(slot_id = l.id, date="2023-11-23").values().all()
+            if student.exists():
+                labroom_data["update_url"].append(reverse('labroom-detail', args=[l.pk, str(today)]))
+            else:
+                labroom_data["reserve_url"].append(reverse('labroom-detail', args=[l.pk, str(today)]))
+            
+            today = datetime.now().date() + timedelta(days=1)
+    '''
+
+
+
+
+    context = {'views_url': view_urls_datewise,'dates':dates,'labrooms':labroom_list,'data':table_data}
+    return render(request, 'alras_application/labroom_list.html', context)
