@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from .models import Student, LabRoom, RoomSlot
+from .models import Student, LabRoom
 from django.views import generic
-from .forms import ReserveSlotForm, ReserveAnySlotForm, CreateUserForm
+from .forms import ReserveSlotForm, CreateUserForm, StudentForm
 from django.contrib import messages
 from django.contrib.auth.models import Group
-from django.utils import timezone
 from datetime import datetime, timedelta
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from .decorators import allowed_users
+
+
+
+
 
 # Create your views here.
 def index(request):
@@ -42,6 +46,8 @@ class LabRoomDetailView(generic.DetailView):
         #print(context["students"])
         return context
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['student_role'])
 def reserveSlot(request, pk, date):
     #print(pk)
     #slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
@@ -51,12 +57,15 @@ def reserveSlot(request, pk, date):
     #print(roomslot)
     #print(LabRoom.objects.filter(id=pk))
     labroom = LabRoom.objects.get(id=pk)
-    print(labroom)
+    print(request.user.id)
     if request.method == 'POST':
         # Create a new dictionary with form data and slot_id
         student_data = request.POST.copy()
         student_data['slot_id'] = pk
         student_data['date'] = date
+        student_data['user_id'] = request.user.id
+        print(student_data)
+
         form = ReserveSlotForm(student_data)
         if form.is_valid():
             # Save the form without committing to the database
@@ -64,6 +73,7 @@ def reserveSlot(request, pk, date):
             # Set the slot relationship
             student.slot_id = pk
             student.date = date
+            student.user_id = request.user.id
             student.save()
 
             # Redirect back to the portfolio detail page
@@ -72,6 +82,10 @@ def reserveSlot(request, pk, date):
     context = {'form': form,'labroom':labroom,'date':date}
     return render(request, 'alras_application/reserve_slot.html', context)
 
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['student_role'])
 def cancelSlot(request,pk,date):
     #slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
     #roomslot = RoomSlot.objects.get(id=slot_id)
@@ -84,6 +98,11 @@ def cancelSlot(request,pk,date):
         return redirect('labroom-detail', pk, date)
     return render(request,'alras_application/cancel_slot.html',{'pk':pk,'labroom':labroom,'date':date})
 
+
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['student_role'])
 def updateSlot(request, pk, date):
     #slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
     student = Student.objects.filter(slot_id=pk,date=date).values()[0]
@@ -212,7 +231,7 @@ def registerPage(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
-            group = Group.objects.get(name='student')
+            group = Group.objects.get(name='student_role')
             user.groups.add(group)
             student = Student.objects.create(user=user)
             student.save()
@@ -307,3 +326,26 @@ def labroom_list(request):
 
     context = {'views_url': view_urls_datewise,'dates':dates,'labrooms':labroom_list,'data':table_data}
     return render(request, 'alras_application/labroom_list.html', context)
+
+
+def userPage(request):
+    user_id = request.user.id
+    student_slots = Student.objects.filter(user_id=user_id)
+    print(student_slots)
+
+
+    '''
+    student = request.user
+    form = StudentForm(instance = student)
+    print('student',student)
+
+    if request.method == 'POST':
+        form = StudentForm(request.POST, request.FILES, instance = student)
+        if form.is_valid():
+            form.save()
+
+    context = {'form':form}
+    '''
+    return render(request,'alras_application/user.html',{'student_slots':student_slots})
+
+

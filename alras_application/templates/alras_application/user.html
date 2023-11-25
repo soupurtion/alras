@@ -1,0 +1,44 @@
+<!-- inherit from base.html -->
+{% extends 'alras_application/base_template.html' %}
+{% block content %}
+
+<h3> Welcome {{user}} </h3>
+
+
+<h5>My Reservations</h5>
+<div class="table-responsive">
+{% if student_slots %}
+<table class="table table-bordered border-primary">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Room/Slot</th>
+            <th scope="col">Date</th>
+            <th scope="col">Name</th>
+            <th scope="col">email</th>
+            <th scope="col">Major</th>
+            <th scope="col">Purpose</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in student_slots%}
+            <tr> 
+            <td>{{student.slot}} </td>
+            <td> {{student.date|date:"d M Y"}} </td>
+            <td> {{student.name}} </td>
+            <td> {{student.email}} </td>
+            <td> {{student.major}} </td>
+            <td> {{student.purpose}} </td>
+            <td> <a class="btn btn-primary" href="{%url 'update_slot' student.slot_id student.date %}" role="button">Update Slot</a>
+                 <a class="btn btn-primary" href="{%url 'cancel_slot' student.slot_id student.date %}" role="button">Cancel Slot</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{%else%}
+<p> You have no reservations yet. </p>
+{% endif %}
+</div>
+{% endblock %}

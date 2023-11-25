@@ -1,5 +1,8 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+
+
 
 # Create your models here.
 
@@ -43,11 +46,12 @@ class Student(models.Model):
         ('MS-CS', 'MS in Computer Science'),
         ('MS-Sec', 'MS in Security'),
     )
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     email = models.CharField("UCCS Email", max_length=200)
     major = models.CharField(max_length=200, choices= MAJOR)
     slot = models.ForeignKey(LabRoom, on_delete=models.CASCADE, null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
+    date = models.DateField(null=True,blank=True)
     purpose = models.CharField(max_length=200,null=True)
 
     class Meta:

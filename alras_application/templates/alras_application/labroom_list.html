@@ -3,11 +3,12 @@
 
 {% block content %}
 <div class="container justify-content-center">
-<h1 style="color:tomato;">Cyber Security Lab Rooms</h1>
+<h1 style="color:tomato;">Cyber Security Lab Room Availability Status</h1>
 </div>
+<div class="table-responsive">
 {% if data %}
-<table class="table table-striped">
-    <thead>
+<table class="table table-bordered border-primary">
+    <thead class="table-dark">
         <tr>
             <th scope="col">Room/Slot</th>
             {% for date in dates %}
@@ -19,13 +20,14 @@
     <tbody>
         {% for x in data %}
         <tr>
-            <th scope="row">{{x.labroom}}</th>
+            <th class="table-dark-bg-subtle" scope="row">{{x.labroom}}</th>
             {% for url in x.urls %}
-                <td><a class="btn btn-primary" href="{{ url.view }}" role="button">View</a>
                 {% if url.reserve %}
-                   <a class="btn btn-primary" href="{{ url.reserve }}" role="button">Reserve</a></td>
+                <td class="table-danger"><a class="btn btn-info btn-sm" href="{{ url.view }}" role="button">View</a>
+                   <a class="btn btn-secondary btn-sm" href="{{ url.reserve }}" role="button">Reserve</a></td>
                 {% else %}
-                    <a class="btn btn-primary" href="{{ url.update }}" role="button">Update</a></td>
+                    <td class="table-warning"><a class="btn btn-info btn-sm" href="{{ url.view }}" role="button">View</a>
+                    <a class="btn btn-success btn-sm" href="{{ url.update }}" role="button">Update</a></td>
                 {% endif %}
         {% endfor %}
         </tr>
@@ -36,4 +38,5 @@
 <p>There are no lab rooms configured.</p>
 </div>
 {% endif %}
+</div>
 {% endblock %}

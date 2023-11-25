@@ -2,6 +2,7 @@
 {% extends 'alras_application/base_template.html' %}
 
 {% block content %}
+<div class="container-fluid">
 <h6>Are you sure you want to cancel reservation for {{labroom}} on {{date}}?</h6>
 
 <form action="" method="POST">
@@ -9,6 +10,6 @@
 <a class="btn btn-primary" href="{%url 'labroom-detail' pk date %}" role="button">Cancel</a>
 <input type="submit" value="Submit" />
 </form>
-
+</div>
 
 {% endblock %}

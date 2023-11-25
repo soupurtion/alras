@@ -2,13 +2,8 @@
 
 
 {% block content %}
-<h1>Labroom: {{ labroom.title }} {{ labroom.slot.title }}</h1>
-
-<!-- Comments 
-{% for room in roomslot %}
-<p><strong>Slot Information:</strong> {{ room.title }}</p>
-{% endfor %}
--->
+<div class="container-fluid">
+<h4>Labroom: {{ labroom.title }} {{ labroom.slot.title }}</h4>
 
 {% if students %}
 {% for student in students %}
@@ -20,13 +15,16 @@
 <p><strong>Reservation date:</strong> {{ student.date|date:"F j, Y" }}</p>
 </div>
 {% endfor %}
+{% if message %}
 <a class="btn btn-primary" href="{%url 'update_slot' labroom.id date%}" role="button">Update Slot</a>
 <a class="btn btn-primary" href="{%url 'cancel_slot' labroom.id date %}" role="button">Cancel Slot</a>
+{% endif %}
 {% else %}
 <div class="col-sm-4 p-1 border rounded-top bg-info text-dark">
 <p>This slot is available for reservation</p>
 <a class="btn btn-primary" href="{% url 'reserve_slot' labroom.id date %}" role="button">Reserve</a>
 {% endif %}
 <a class="btn btn-primary" href="{%url 'labroom'%}" role="button">Go back</a>
+</div>
 </div>
 {% endblock %}

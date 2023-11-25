@@ -11,6 +11,7 @@
 </head>
 
 
+
 <body>
 <div class="container-fluid p-2">
 <!-- Navbar -->
@@ -29,8 +30,13 @@
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Account</a>
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'login' %}">Sign In</a></li>
-    <li><a class="dropdown-item" href="{% url 'register_page' %}">Sign Up</a></li>
+  {% if message %}
+    <a class="dropdown-item" href="{% url 'user_page' %}">My Reservations</a>
+    <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+  {% else %}
+    <li><a class="dropdown-item" href="{% url 'login' %}">Log In</a></li>
+    <li><a class="dropdown-item" href="{% url 'register_page' %}">Register</a></li>
+  {% endif %}
   </ul>
 </li>
 </div>

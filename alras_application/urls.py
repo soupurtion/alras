@@ -19,8 +19,10 @@ path('labroom/<int:pk>/<str:date>/update_slot/', views.updateSlot, name='update_
 #path('labroom/cancel_slot/', views.cancelAnySlot, name='cancel_any_slot'),
 #path('labroom/update_slot/', views.updateAnySlot, name='update_any_slot'),
 path('accounts/',include('django.contrib.auth.urls'), name='login'),
+path('accounts/',include('django.contrib.auth.urls'), name='logout'),
 path('accounts/register/', views.registerPage, name='register_page'),
 #path('slots-for-date/', views.view_slots_for_date, name='view_slots_for_date'),
+path('accounts/profile/',views.userPage,name='user_page'),
 ]
 
 
