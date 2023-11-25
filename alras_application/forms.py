@@ -8,10 +8,10 @@ from django.contrib.auth.models import User
 class ReserveSlotForm(ModelForm):
     class Meta:
         model = Student
-        fields =('name', 'email', 'major','slot','date','purpose')
-        widgets = {
-            'date': DateInput(attrs={'type': 'date'}),
-        }
+        fields =('name', 'email', 'major','purpose')
+        #widgets = {
+        #    'date': DateInput(attrs={'type': 'date'}),
+        #}
 
 class ReserveAnySlotForm(ModelForm):
     class Meta:

@@ -31,17 +31,92 @@ class LabRoomDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         #today = datetime.now().date()
         today = self.kwargs['date']
-        print(self.kwargs['pk'])
+        #print(self.kwargs['pk'])
         context = super().get_context_data(**kwargs)
         #print(self.objects.values().all())
         #a = LabRoom.objects.filter(id=self.kwargs['pk']).values().all()[0]['slot_id']
         #print(a)
         #context["roomslot"] = RoomSlot.objects.filter(id=a)
         context["students"] = Student.objects.filter(slot_id=self.kwargs['pk'],date=today)
-        print(context["students"])
+        context['date'] = today
+        #print(context["students"])
         return context
 
-def reserveSlot(request, pk):
+def reserveSlot(request, pk, date):
+    #print(pk)
+    #slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
+    #print(slot_id)
+    form = ReserveSlotForm()
+    #roomslot = RoomSlot.objects.get(id=slot_id)
+    #print(roomslot)
+    #print(LabRoom.objects.filter(id=pk))
+    labroom = LabRoom.objects.get(id=pk)
+    print(labroom)
+    if request.method == 'POST':
+        # Create a new dictionary with form data and slot_id
+        student_data = request.POST.copy()
+        student_data['slot_id'] = pk
+        student_data['date'] = date
+        form = ReserveSlotForm(student_data)
+        if form.is_valid():
+            # Save the form without committing to the database
+            student = form.save(commit=False)
+            # Set the slot relationship
+            student.slot_id = pk
+            student.date = date
+            student.save()
+
+            # Redirect back to the portfolio detail page
+            return redirect('labroom-detail', pk, date)
+
+    context = {'form': form,'labroom':labroom,'date':date}
+    return render(request, 'alras_application/reserve_slot.html', context)
+
+def cancelSlot(request,pk,date):
+    #slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
+    #roomslot = RoomSlot.objects.get(id=slot_id)
+    labroom = LabRoom.objects.get(id=pk)
+    student = Student.objects.get(slot_id=pk,date=date)
+    #print(student)
+    date  = date
+    if request.method == 'POST':
+        student.delete()
+        return redirect('labroom-detail', pk, date)
+    return render(request,'alras_application/cancel_slot.html',{'pk':pk,'labroom':labroom,'date':date})
+
+def updateSlot(request, pk, date):
+    #slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
+    student = Student.objects.filter(slot_id=pk,date=date).values()[0]
+    s_id = student['id']
+    print(student)
+    #roomslot = RoomSlot.objects.get(id=slot_id)
+    form = ReserveSlotForm(initial=student)
+    labroom = LabRoom.objects.get(id=pk)
+    date = date
+    if request.method == 'POST':
+        # Create a new dictionary with form data and slot_id
+        student_data = request.POST.copy()
+        student_data['slot_id'] = pk
+        student_data['date'] = date
+        form = ReserveSlotForm(student_data)
+
+        if form.is_valid():
+            # Save the form without committing to the database
+            student = form.save(commit=False)
+            # Set the slot relationship
+            student.slot_id = pk
+            student.id = s_id
+            student.date = date
+            student.save()
+
+            # Redirect back to the portfolio detail page
+            return redirect('labroom-detail', pk, date)
+
+    context = {'form': form,'labroom':labroom,'pk':pk,'date':date}
+    return render(request, 'alras_application/update_slot.html', context)
+
+'''
+def reserveSlot_bkp(request, pk,date):
     print(pk)
     slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
     print(slot_id)
@@ -68,45 +143,6 @@ def reserveSlot(request, pk):
     context = {'form': form,'roomslot':roomslot}
     return render(request, 'alras_application/reserve_slot.html', context)
 
-def cancelSlot(request,pk):
-    slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
-    roomslot = RoomSlot.objects.get(id=slot_id)
-    student = Student.objects.get(slot_id=slot_id)
-    if request.method == 'POST':
-        student.delete()
-        return redirect('labroom-detail', slot_id)
-    
-    return render(request,'alras_application/cancel_slot.html',{'pk':pk,'roomslot':roomslot})
-
-def updateSlot(request, pk):
-    slot_id = LabRoom.objects.filter(id=pk).values().all()[0]['slot_id']
-    student = Student.objects.filter(slot_id=slot_id).values()[0]
-    s_id = student['id']
-    print(s_id)
-    roomslot = RoomSlot.objects.get(id=slot_id)
-    form = ReserveSlotForm(initial=student)
-    
-    if request.method == 'POST':
-        # Create a new dictionary with form data and slot_id
-        student_data = request.POST.copy()
-        student_data['slot_id'] = slot_id
-        form = ReserveSlotForm(student_data)
-
-        if form.is_valid():
-            # Save the form without committing to the database
-            student = form.save(commit=False)
-            # Set the slot relationship
-            student.slot = roomslot
-            student.id = s_id
-            student.save()
-
-            # Redirect back to the portfolio detail page
-            return redirect('labroom-detail', slot_id)
-
-    context = {'form': form,'roomslot':roomslot,'pk':pk}
-    return render(request, 'alras_application/update_slot.html', context)
-
-'''
 def reserveAnySlot(request):
     form = ReserveAnySlotForm()
     
@@ -229,10 +265,22 @@ def labroom_list(request):
         today = datetime.now().date()
         temp = []
         for i in range(7):
+
+            vur_url = {}
+
             #date_for_url = today + timedelta(days=i)
-            temp.append(reverse('labroom-detail', args=[labroom.pk, str(today)]))
+            vur_url["view"] = reverse('labroom-detail', args=[labroom.pk, str(today)])
+
+            student = Student.objects.filter(slot_id = labroom.id, date=today).values().all()
+            if student.exists():
+                vur_url["update"] = (reverse('update_slot', args=[labroom.pk, str(today)]))
+            else:
+                vur_url["reserve"] = (reverse('reserve_slot', args=[labroom.pk, str(today)]))
+
+            temp.append(vur_url)
+            #temp.append(reverse('labroom-detail', args=[labroom.pk, str(today)]))
             today = datetime.now().date() + timedelta(days=i+1)
-        print(temp)
+        #print(temp)
         view_urls_datewise.append(temp)
         table_data.append({'labroom':labroom,'urls':temp})
     #print(dates)
@@ -250,15 +298,12 @@ def labroom_list(request):
             labroom_data["view_url"].append(reverse('labroom-detail', args=[l.pk, str(today)]))
             student = Student.objects.filter(slot_id = l.id, date="2023-11-23").values().all()
             if student.exists():
-                labroom_data["update_url"].append(reverse('labroom-detail', args=[l.pk, str(today)]))
+                labroom_data["update_url"].append(reverse('update_slot', args=[l.pk, str(today)]))
             else:
-                labroom_data["reserve_url"].append(reverse('labroom-detail', args=[l.pk, str(today)]))
+                labroom_data["reserve_url"].append(reverse('reserve_slot', args=[l.pk, str(today)]))
             
             today = datetime.now().date() + timedelta(days=1)
     '''
-
-
-
 
     context = {'views_url': view_urls_datewise,'dates':dates,'labrooms':labroom_list,'data':table_data}
     return render(request, 'alras_application/labroom_list.html', context)

@@ -6,7 +6,7 @@
 <h1 style="color:tomato;">Cyber Security Lab Rooms</h1>
 </div>
 {% if data %}
-<table class="table table-bordered">
+<table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">Room/Slot</th>
@@ -21,7 +21,12 @@
         <tr>
             <th scope="row">{{x.labroom}}</th>
             {% for url in x.urls %}
-                <td><a class="btn btn-primary" href="{{ url}}" role="button">View</a></td>
+                <td><a class="btn btn-primary" href="{{ url.view }}" role="button">View</a>
+                {% if url.reserve %}
+                   <a class="btn btn-primary" href="{{ url.reserve }}" role="button">Reserve</a></td>
+                {% else %}
+                    <a class="btn btn-primary" href="{{ url.update }}" role="button">Update</a></td>
+                {% endif %}
         {% endfor %}
         </tr>
         {% endfor %}

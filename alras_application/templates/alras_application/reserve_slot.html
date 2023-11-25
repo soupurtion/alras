@@ -5,7 +5,8 @@
 <!-- Replace block content in base_template.html -->
 {% block content %}
 
-<h4> Reserve Slot: {{ roomslot }} </h4>
+<h4> Reserve Slot: {{ labroom }} </h4>
+<h4> Date: {{ date }} </h4>
 
 <div class="col-sm-3 p-1 border rounded-top bg-info text-dark">
 <form action="" method="POST">
@@ -14,7 +15,7 @@
 {{ form.as_table }}
 </table>
 <input type="submit" name="Submit">
+<a class="btn btn-primary" href="{%url 'labroom'%}" role="button">Go back</a>
 </form>
 </div>
-
 {% endblock %}
