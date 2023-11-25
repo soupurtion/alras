@@ -332,7 +332,10 @@ def userPage(request):
     user_id = request.user.id
     student_slots = Student.objects.filter(user_id=user_id)
     print(student_slots)
-
+    if student_slots[0].name:
+        i = 1
+    else:
+        i = 0
 
     '''
     student = request.user
@@ -346,6 +349,6 @@ def userPage(request):
 
     context = {'form':form}
     '''
-    return render(request,'alras_application/user.html',{'student_slots':student_slots})
+    return render(request,'alras_application/user.html',{'student_slots':student_slots,'i':i})
 
 
