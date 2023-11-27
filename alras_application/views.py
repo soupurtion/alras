@@ -215,5 +215,3 @@ def userPage(request):
         i = 0
     
     return render(request,'alras_application/user.html',{'student_slots':student_slots,'i':i})
-
-
