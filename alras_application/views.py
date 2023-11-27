@@ -233,8 +233,8 @@ def registerPage(request):
             username = form.cleaned_data.get('username')
             group = Group.objects.get(name='student_role')
             user.groups.add(group)
-            student = Student.objects.create(user=user)
-            student.save()
+            #student = Student.objects.create(user=user)
+            #student.save()
 
             messages.success(request,'Account was created for '+username)
             return redirect('login')
@@ -263,7 +263,6 @@ def view_slots_for_date(request):
 def labroom_list(request):
     labrooms = LabRoom.objects.all()
     
-
     # Create a list of dictionaries with LabRoom instances and their corresponding absolute URLs
     #labroom_data = [{"labroom":[],"view_url":[],"reserve_url":[],"update_url":[],"date":[]}]
     #labroom_data = {"labroom":[]}
@@ -332,12 +331,20 @@ def userPage(request):
     user_id = request.user.id
     student_slots = Student.objects.filter(user_id=user_id)
     print(student_slots)
-    if student_slots[0].name:
+    student_slots.filter(name='').delete()
+
+    if student_slots:
         i = 1
     else:
         i = 0
-
     '''
+    try:
+        student_slots = Student.objects.filter(user_id=user_id)
+        i = 1
+        print(student_slots)
+    except:
+        i = 0
+    
     student = request.user
     form = StudentForm(instance = student)
     print('student',student)

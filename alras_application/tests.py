@@ -9,7 +9,7 @@ from .forms import ReserveSlotForm, CreateUserForm
 from .models import Student, LabRoom
 from django.contrib.auth.models import User
 
-'''
+
 #Unit Tests
 class HomepageTests(TestCase):
     def test_url_exists_at_correct_location(self):
@@ -44,7 +44,6 @@ class LabRoomDetailViewTest(TestCase):
         self.assertContains(response, 'Test Post')
 
 
-'''
 
 
 # Testing with Selenium WebDriver
